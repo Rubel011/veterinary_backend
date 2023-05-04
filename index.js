@@ -12,7 +12,9 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(cors());
 
-
+app.get('/',(req,res)=>{
+    res.send("Server is Working.....")
+})
 app.use('/user',userRouter);
 
 
@@ -22,9 +24,7 @@ app.use(authenticator)
 
 app.use("/appointment",AppointmentRouter)
 
-app.get('/',(req,res)=>{
-    res.send("Server is Working")
-})
+
 
 
 
