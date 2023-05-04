@@ -1,7 +1,7 @@
 const express=require('express');
 const cors=require('cors');
 const { connection } = require("./config/db");
-const {userRouter} = require("./Routes/UserRouter")
+const {userRouter} = require("./Routes/userrouter")
 const {doctorRouter} = require("./Routes/DoctorRouter")
 const {AppointmentRouter} = require("./Routes/AppointmentRouter")
 const {authenticator}  = require("./Middleware/authenticator")
