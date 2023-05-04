@@ -5,6 +5,7 @@ const { client } = require("../config/redisDB");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const { BlockModel } = require("../Models/blockUser");
 
 const userRouter = express.Router()
 
@@ -60,7 +61,7 @@ userRouter.post("/login", async (req, res) => {
                 const token = jwt.sign({ userID: user[0]._id }, process.env.secret,{ expiresIn: "30m"});
                 const reftoken = jwt.sign({ userID: user[0]._id }, process.env.refsecret,{ expiresIn: "1d"});
                 // client.HSET("tokensObj", email, token)
-                await client.HSET("tokensObj", token,"exist","EX",6)
+                // await client.HSET("tokensObj", token,"exist","EX",6)
                 // await client.expire("tokensObj",60)
 
                 res.cookie("token",token)
@@ -91,8 +92,10 @@ userRouter.patch("/update/:id", async (req, res) => {
 userRouter.get("/logout", async (req, res) => {
     try {
         let token=req.cookies.token
-        // console.log(token);
-        await client.HDEL("tokensObj", token)
+        console.log(token);
+        // await client.HDEL("tokensObj", token)
+        let block=new BlockModel({token})
+        await block.save()
         res.send({ "mess": "Logout Successful" })
     } catch (error) {
         res.send({ "Error": error.message })
