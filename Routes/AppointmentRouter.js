@@ -38,8 +38,8 @@ AppointmentRouter.post("/create", async (req, res) => {
                 await appointment.save()
                 res.send(JSON.stringify("Appointment Created"));
                 
-                let vetCareEmail= process.env.VetcareEmail
-                let password= process.env.password
+                let vetCareEmail= process.env.vetspotEmail
+                let vetspotPassword= process.env.vetspotPassword
                 const msg = {
                     to: email,
                     from: "Vetcare",
@@ -49,8 +49,8 @@ AppointmentRouter.post("/create", async (req, res) => {
                 const transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: vetCareEmail,
-                        pass: password
+                        user: vetspotEmail,
+                        pass: vetspotPassword
                     },
                     port: 425,
                     host: 'smtp.gmail.com'
