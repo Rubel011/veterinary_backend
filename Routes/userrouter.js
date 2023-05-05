@@ -19,7 +19,7 @@ userRouter.get("/all",authenticator,async(req,res)=>{
         
     }
 })
-userRouter.delete("delete/:id",authenticator,async(req,res)=>{
+userRouter.delete("/delete/:id",authenticator,async(req,res)=>{
     try {
         let id=req.params.id
        let data= await UserModel.findByIdAndDelete({_id:id})
