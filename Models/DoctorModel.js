@@ -6,6 +6,7 @@ const doctorSchema= mongoose.Schema({
     age:Number,
     experience:Number,
     specialization:String
+    
 },{
     versionKey:false
 })

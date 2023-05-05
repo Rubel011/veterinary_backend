@@ -6,8 +6,40 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const { BlockModel } = require("../Models/blockUser");
+const { authenticator } = require("../Middleware/authenticator");
 
 const userRouter = express.Router()
+
+userRouter.get("/all",authenticator,async(req,res)=>{
+    try {
+        let data= await UserModel.find();
+        res.status(200).json({data})
+    } catch (error) {
+        res.status(400).json({err:error.message})
+        
+    }
+})
+userRouter.delete("delete/:id",authenticator,async(req,res)=>{
+    try {
+        let id=req.params.id
+       let data= await UserModel.findByIdAndDelete({_id:id})
+        res.status(200).json({msg:data})
+    } catch (error) {
+        res.status(400).json({err:error.message})
+        
+    }
+})
+userRouter.patch("/update/:id", authenticator,async (req, res) => {
+    try {
+        let newdata = req.body;
+        let id = req.params.id
+        let user = await UserModel.findByIdAndUpdate({ _id: id }, newdata);
+        res.send({ "mess": "User Details Updated" })
+    } catch (error) {
+        res.send({ "Error": error.message })
+    }
+})
+
 
 userRouter.post("/register", async (req, res) => {
     let { password, email, name } = req.body;
@@ -68,31 +100,21 @@ userRouter.post("/login", async (req, res) => {
                 res.cookie("reftoken",reftoken)
                 res.send({ "message": "Login Successful", "Token": token,"reftoken":reftoken, "User": user[0] })
             } else {
-                res.send(JSON.stringify("Wrong Credentials"))
+                res.status(400).json({err:"Wrong credentials"})
             }
         });
     } else {
-        res.status(400).json({messate:"Wrong credentials"})
+        res.status(400).json({err:"Wrong credentials"})
     }
 })
 
 
-userRouter.patch("/update/:id", async (req, res) => {
-    try {
-        let newdata = req.body;
-        let id = req.params.id
-        let user = await UserModel.findByIdAndUpdate({ _id: id }, newdata);
-        res.send({ "mess": "User Details Updated" })
-    } catch (error) {
-        res.send({ "Error": error.message })
-    }
-})
 
 
 userRouter.get("/logout", async (req, res) => {
     try {
         let token=req.cookies.token
-        console.log(token);
+        // console.log(token);
         // await client.HDEL("tokensObj", token)
         let block=new BlockModel({token})
         await block.save()

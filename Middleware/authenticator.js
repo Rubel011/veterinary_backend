@@ -1,6 +1,7 @@
 const jwt=require("jsonwebtoken");
 const {client} = require("../config/redisDB");
 const { BlockModel } = require("../Models/blockUser");
+const { UserModel } = require("../Models/UserModel");
 require("dotenv").config();
 const authenticator= async(req,res,next)=>{
     // const token=req.headers.authorization;
@@ -10,11 +11,13 @@ const authenticator= async(req,res,next)=>{
 
     // console.log(isBlacklist);
     if(!isBlacklist){
-        const decoded=jwt.verify(token,process.env.secret,(err,decoded)=>{
+        const decoded=jwt.verify(token,process.env.secret,async(err,decoded)=>{
             if(err){
                 res.status(400).json({"err":"Please Login first"})
             }else{
-              
+                const userData= await UserModel.findById({_id:decoded.userID})
+                req.user=userData
+                console.log(req.user)
                 req.body.userID=decoded.userID
                 next()
             }
