@@ -7,10 +7,11 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const { BlockModel } = require("../Models/blockUser");
 const { authenticator } = require("../Middleware/authenticator");
+const { checkRole } = require("../Middleware/authorization");
 
 const userRouter = express.Router()
 
-userRouter.get("/all",authenticator,async(req,res)=>{
+userRouter.get("/all",authenticator,checkRole(["admin","superadmin"]),async(req,res)=>{
     try {
         let data= await UserModel.find();
         res.status(200).json({data})
@@ -19,7 +20,7 @@ userRouter.get("/all",authenticator,async(req,res)=>{
         
     }
 })
-userRouter.delete("/delete/:id",authenticator,async(req,res)=>{
+userRouter.delete("/delete/:id",authenticator,checkRole(["admin","superadmin"]),async(req,res)=>{
     try {
         let id=req.params.id
        let data= await UserModel.findByIdAndDelete({_id:id})
@@ -29,7 +30,7 @@ userRouter.delete("/delete/:id",authenticator,async(req,res)=>{
         
     }
 })
-userRouter.patch("/update/:id", authenticator,async (req, res) => {
+userRouter.patch("/update/:id", authenticator,checkRole(["admin","superadmin"]),async (req, res) => {
     try {
         let newdata = req.body;
         let id = req.params.id

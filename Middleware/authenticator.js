@@ -4,8 +4,9 @@ const { BlockModel } = require("../Models/blockUser");
 const { UserModel } = require("../Models/UserModel");
 require("dotenv").config();
 const authenticator= async(req,res,next)=>{
-    // const token=req.headers.authorization;
-    const token = req.cookies.token
+    const token=req.headers.authorization;
+    // console.log(token)
+    // const token = req.cookies.token
     // const isBlacklist = await client.HGET("tokensObj" ,token)
     const isBlacklist= await BlockModel.findOne({token})
 
@@ -17,7 +18,7 @@ const authenticator= async(req,res,next)=>{
             }else{
                 const userData= await UserModel.findById({_id:decoded.userID})
                 req.user=userData
-                console.log(req.user)
+                // console.log(req.user)
                 req.body.userID=decoded.userID
                 next()
             }

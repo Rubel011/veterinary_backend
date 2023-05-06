@@ -5,4 +5,4 @@ const client = createClient({
 });
 client.connect();
 
-module.exports = { client }
+// module.exports = { client }
