@@ -5,11 +5,16 @@ const doctorSchema= mongoose.Schema({
     gender:String,
     img:String,  // added by Hariom
     age:Number,
+    email:String,
+    phone:Number,
     experience:Number,
-    specialization:String
+    specialization:String,
+    timesolot:Object
 },{
     versionKey:false
 })
+
+  
 
 const DoctorModel=mongoose.model("DoctorDetail",doctorSchema)
 

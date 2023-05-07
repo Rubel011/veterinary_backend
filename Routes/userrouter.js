@@ -5,8 +5,42 @@ const { client } = require("../config/redisDB");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const { BlockModel } = require("../Models/blockUser");
+const { authenticator } = require("../Middleware/authenticator");
+const { checkRole } = require("../Middleware/authorization");
 
 const userRouter = express.Router()
+
+userRouter.get("/all",authenticator,checkRole(["admin","superadmin"]),async(req,res)=>{
+    try {
+        let data= await UserModel.find();
+        res.status(200).json({data})
+    } catch (error) {
+        res.status(400).json({err:error.message})
+        
+    }
+})
+userRouter.delete("/delete/:id",authenticator,checkRole(["admin","superadmin"]),async(req,res)=>{
+    try {
+        let id=req.params.id
+       let data= await UserModel.findByIdAndDelete({_id:id})
+        res.status(200).json({msg:data})
+    } catch (error) {
+        res.status(400).json({err:error.message})
+        
+    }
+})
+userRouter.patch("/update/:id", authenticator,checkRole(["admin","superadmin"]),async (req, res) => {
+    try {
+        let newdata = req.body;
+        let id = req.params.id
+        let user = await UserModel.findByIdAndUpdate({ _id: id }, newdata);
+        res.send({ "mess": "User Details Updated" })
+    } catch (error) {
+        res.send({ "Error": error.message })
+    }
+})
+
 
 userRouter.post("/register", async (req, res) => {
     let { password, email, name } = req.body;
@@ -60,39 +94,31 @@ userRouter.post("/login", async (req, res) => {
                 const token = jwt.sign({ userID: user[0]._id }, process.env.secret,{ expiresIn: "30m"});
                 const reftoken = jwt.sign({ userID: user[0]._id }, process.env.refsecret,{ expiresIn: "1d"});
                 // client.HSET("tokensObj", email, token)
-                await client.HSET("tokensObj", token,"exist","EX",6)
+                // await client.HSET("tokensObj", token,"exist","EX",6)
                 // await client.expire("tokensObj",60)
 
                 res.cookie("token",token)
                 res.cookie("reftoken",reftoken)
                 res.send({ "message": "Login Successful", "Token": token,"reftoken":reftoken, "User": user[0] })
             } else {
-                res.send(JSON.stringify("Wrong Credentials"))
+                res.status(400).json({err:"Wrong credentials"})
             }
         });
     } else {
-        res.status(400).json({messate:"Wrong credentials"})
+        res.status(400).json({err:"Wrong credentials"})
     }
 })
 
 
-userRouter.patch("/update/:id", async (req, res) => {
-    try {
-        let newdata = req.body;
-        let id = req.params.id
-        let user = await UserModel.findByIdAndUpdate({ _id: id }, newdata);
-        res.send({ "mess": "User Details Updated" })
-    } catch (error) {
-        res.send({ "Error": error.message })
-    }
-})
 
 
 userRouter.get("/logout", async (req, res) => {
     try {
         let token=req.cookies.token
         // console.log(token);
-        await client.HDEL("tokensObj", token)
+        // await client.HDEL("tokensObj", token)
+        let block=new BlockModel({token})
+        await block.save()
         res.send({ "mess": "Logout Successful" })
     } catch (error) {
         res.send({ "Error": error.message })

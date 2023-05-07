@@ -4,7 +4,6 @@ const {DoctorModel}=require('../Models/DoctorModel')
 
 const doctorRouter=express.Router()
 
-// for fetching all doctor in doctor page
 
 doctorRouter.get("/getAllDoc",async(req,res)=>{
     try {
@@ -14,9 +13,6 @@ doctorRouter.get("/getAllDoc",async(req,res)=>{
         console.log(error);
     }
 })
-
-// 
-
 
 doctorRouter.get("/getDocID",async(req,res)=>{
     try { 
