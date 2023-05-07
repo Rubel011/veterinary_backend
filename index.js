@@ -22,6 +22,8 @@ app.use('/user',userRouter);
 app.use("/doctor",doctorRouter)
 
 
+app.use(authenticator)
+
 app.use("/appointment",AppointmentRouter)
 
 

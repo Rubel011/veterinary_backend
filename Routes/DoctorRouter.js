@@ -4,6 +4,7 @@ const {DoctorModel}=require('../Models/DoctorModel')
 
 const doctorRouter=express.Router()
 
+
 doctorRouter.get("/getAllDoc",async(req,res)=>{
     try {
         let data = await DoctorModel.find()
