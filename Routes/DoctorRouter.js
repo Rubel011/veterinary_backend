@@ -4,6 +4,20 @@ const {DoctorModel}=require('../Models/DoctorModel')
 
 const doctorRouter=express.Router()
 
+// for fetching all doctor in doctor page
+
+doctorRouter.get("/getAllDoc",async(req,res)=>{
+    try {
+        let data = await DoctorModel.find()
+        res.json({msg:"success",data:data});
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// 
+
+
 doctorRouter.get("/getDocID",async(req,res)=>{
     try { 
             let name=req.headers.name;
