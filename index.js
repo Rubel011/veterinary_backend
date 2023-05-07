@@ -18,7 +18,7 @@ app.get('/',(req,res)=>{
 app.use('/user',userRouter);
 
 
-app.use(authenticator)
+// app.use(authenticator)
 app.use("/doctor",doctorRouter)
 
 

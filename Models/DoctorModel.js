@@ -4,12 +4,16 @@ const doctorSchema= mongoose.Schema({
     name:String,
     gender:String,
     age:Number,
+    email:String,
+    phone:Number,
     experience:Number,
-    specialization:String
-    
+    specialization:String,
+    timesolot:Object
 },{
     versionKey:false
 })
+
+  
 
 const DoctorModel=mongoose.model("DoctorDetail",doctorSchema)
 
