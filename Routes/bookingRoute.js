@@ -105,7 +105,7 @@ timeSlot.patch("/hidetime/:uniqueId/:button", async (req, res) => {
 // for update existing btn 
 timeSlot.patch("/uptime", async (req, res) => { // 
     let { uniqueId, date, time } = req.body;
-    console.log(time);
+    // console.log(time);
     let obj = {};
     let exisWorkerAndSlot = await SlotBookingModel.findOne({ $and: [{ uniqueId }, { date }] });
     console.log(exisWorkerAndSlot);
@@ -113,15 +113,16 @@ timeSlot.patch("/uptime", async (req, res) => { //
         obj = exisWorkerAndSlot.slots
         for (let key in obj) {
             if (key == time) {
-                // console.log(key);
+                console.log(key);
                 obj[key] = false;
             }
         }
         console.log(obj);
         try {
             let result = await SlotBookingModel.updateOne({ $and: [{ uniqueId }, { date }] }, { slots: obj });
-            console.log(result);
+            console.log(result) ;
             res.send("updated successfully");
+            console.log("updated successfully");
         } catch (error) {
             console.log(error);
             res.send("error in updating");

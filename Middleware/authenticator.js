@@ -10,6 +10,7 @@ const authenticator= async(req,res,next)=>{
     // const isBlacklist = await client.HGET("tokensObj" ,token)
     const isBlacklist= await BlockModel.findOne({token})
 
+
     // console.log(isBlacklist);
     if(!isBlacklist){
         const decoded=jwt.verify(token,process.env.secret,async(err,decoded)=>{
