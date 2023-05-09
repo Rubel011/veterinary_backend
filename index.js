@@ -7,7 +7,8 @@ const {AppointmentRouter} = require("./Routes/AppointmentRouter")
 const {authenticator}  = require("./Middleware/authenticator")
 require('dotenv').config();
 const app=express();
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const { timeSlot } = require('./Routes/bookingRoute');
 app.use(cookieParser())
 app.use(express.json());
 app.use(cors());
@@ -18,11 +19,12 @@ app.get('/',(req,res)=>{
 app.use('/user',userRouter);
 
 
-// app.use(authenticator)
-app.use("/doctor",doctorRouter)
-
-
 app.use(authenticator)
+app.use("/doctor",doctorRouter);
+app.use("/",timeSlot);
+
+
+// app.use(authenticator)
 
 app.use("/appointment",AppointmentRouter)
 

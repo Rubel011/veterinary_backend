@@ -53,7 +53,7 @@ userRouter.post("/register", async (req, res) => {
             req.body.password = hashedPassword
             let user = new UserModel(req.body)
             await user.save();
-            res.send({ "mess": "User Registered Successfull" })
+            
 
             let vetspotEmail = process.env.vetspotEmail
             let vetspotPassword = process.env.vetspotPassword
@@ -78,6 +78,7 @@ userRouter.post("/register", async (req, res) => {
                     console.log('Email sent')
                 }
             })
+            res.send({ "mess": "User Registered Successfull" })
         })
     } catch (error) {
         console.log({ "Error": error.message });
